@@ -12,7 +12,7 @@ def main(animal):
     from_number = '+13203503890' # Your Twilio phone number
     to_numbers = ['+9779819325102'] # List of phone numbers to send messages to
 
-    # Send the messagesS
+    # Send the messages
     for to_number in to_numbers:
         message = client.messages.create(
             body=msg,
@@ -20,3 +20,4 @@ def main(animal):
             to=to_number
         )
         print(f"Sent message to {to_number}, message ID: {message.sid}")
+

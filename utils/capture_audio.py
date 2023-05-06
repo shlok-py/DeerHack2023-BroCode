@@ -19,6 +19,7 @@ def main():
 
 
     print('Capturing audio...')
+    
     audio_data = []
     audio = pyaudio.PyAudio()
     stream = audio.open(format=audio_format, channels=channels, rate=sample_rate, input=True, frames_per_buffer=chunk_size)
@@ -34,6 +35,8 @@ def main():
     wav_file.setframerate(sample_rate)
     wav_file.writeframes(audio_frames)
     wav_file.close()
+    print("Audio captured")
+
 
 
     

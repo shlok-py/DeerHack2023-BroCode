@@ -18,7 +18,7 @@ def predict_image():
     print('Predicting image...')
     # image_dir = 'images_captured'
     # image_path = os.path.join(image_dir, f"image.jpg")
-    image_path = "E:\Shit stuffs\deerhack_\images_captured\ear0.jpg"
+    image_path = "E:\Shit stuffs\deerhack_\images_captured\image.jpg"
 
     image = load_img(image_path, target_size=(224, 224))
     image = img_to_array(image)
@@ -29,31 +29,33 @@ def predict_image():
     predictions = model.predict(image)
     predictions_max = np.argmax(predictions, axis=1)
     # predictions = 1
-    print("image ko index", predictions_max[0])
+    # print("image ko index", predictions_max[0])
     # os.remove(image_path)
 
     animal = image_dic.image_dic[predictions_max[0]]
 
 
     consolidate.append([animal, predictions[0][predictions_max[0]]])
-    print("consolidate after image prediction",consolidate)
+    # print("consolidate after image prediction",consolidate)
 
 
 def predict_audio():
     print('Predicting audio...')
-    model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'animalAudio1.h5')
+
+    model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'animalAudio(3).h5')
     model = load_model(model_path)
 
     # audio_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'audio_captured', 'audio.wav')
 
-    audio_path = "E://Shit stuffs//deerhack_//audio_samples//tiger//27.wav"
+    # audio_path = "E://Shit stuffs//deerhack_//audio_captured//audio.wav"
+    audio_path = "E://Shit stuffs//deerhack_//audio_samples//tiger//52.wav"
     signal,rate = librosa.load(audio_path, sr=12000)
-    mask = envelope(signal, rate, 0.005)
+    mask = envelope(signal, rate, 0.0005)
 
     conf = Config()
 
     signal = signal[mask]
-    print("signal_shape",signal.shape)
+    # print("signal_shape",signal.shape)
     rand_index = np.random.randint(0, signal.shape[0]-conf.step)
     signal = signal[rand_index:rand_index+conf.step]
     
@@ -67,13 +69,13 @@ def predict_audio():
     y_hat = model.predict(sample)
     y_pred = np.argmax(y_hat, axis=1)
 
-    print("index of max prob audio", y_pred)
+    # print("index of max prob audio", y_pred)
 
     animal = audio_dic[y_pred[0]]
-    print(f"animal: {animal}")
+
     #append consolidate with the list [animal, confidence level]
-    consolidate.append([animal, y_hat[0][y_pred][0]])
-    print("consolidate after audio processing", consolidate)
+    consolidate.append([animal, (y_hat[0][y_pred][0])])
+    # print("consolidate after audio processing", consolidate)
 
 def consolidate_func():
     #find value at index 1 of the two lists inside the list and return the value of index 0 of the list with the higher value
@@ -85,9 +87,9 @@ def consolidate_func():
         animal = consolidate[1][0]
     print(animal)
 
-    print("consolidate after consolidation", consolidate)
+    # print("consolidate after consolidation", consolidate)
     #send sms
-    #send_sms.main(animal)
+    send_sms.main(animal)
 
 
 def start_threads():
@@ -111,10 +113,7 @@ def main():
     count = 0
     while count < 2:
         input.main()
-        print(count)
         count += 1
-    
-
 
 
 if __name__ == '__main__':
